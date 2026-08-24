@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# Umgebungsvariablen gehoeren NIE ins Repo.
+.env
+.env*.local
+.env.production
+
+# Supabase CLI
+.branches
+.temp
+
+next-env.d.ts
+
+# TypeScript-Zwischenstand
+*.tsbuildinfo
+
+.vercel

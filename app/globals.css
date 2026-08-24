@@ -1,0 +1,530 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   Anfragen-Board
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: light dark;
+
+  --grund: #fbfbfd;
+  --flaeche: #ffffff;
+  --flaeche-2: #f4f5f8;
+  --linie: #e4e6ec;
+  --linie-stark: #d3d6df;
+
+  --text: #14161c;
+  --text-2: #4b5162;
+  --text-3: #868c9c;
+
+  --akzent: #4f46e5;
+  --akzent-hell: #eef0fe;
+  --akzent-text: #4338ca;
+
+  --gruen: #0f8a5f;
+  --gruen-hell: #e6f5ee;
+  --gelb: #a86a00;
+  --gelb-hell: #fdf1de;
+  --blau: #2563c9;
+  --blau-hell: #e8f0fd;
+
+  --radius: 12px;
+  --radius-klein: 8px;
+  --schatten: 0 1px 2px rgb(16 18 24 / 0.04), 0 4px 12px rgb(16 18 24 / 0.04);
+  --schatten-stark: 0 2px 4px rgb(16 18 24 / 0.06), 0 12px 28px rgb(16 18 24 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #0c0d11;
+    --flaeche: #141620;
+    --flaeche-2: #1b1e2a;
+    --linie: #262a38;
+    --linie-stark: #343949;
+
+    --text: #f2f3f7;
+    --text-2: #a8aec0;
+    --text-3: #6f7689;
+
+    --akzent: #8b87ff;
+    --akzent-hell: #1e1d3a;
+    --akzent-text: #a5a1ff;
+
+    --gruen: #4ade9f;
+    --gruen-hell: #10281f;
+    --gelb: #f0b45e;
+    --gelb-hell: #2a2013;
+    --blau: #79aaff;
+    --blau-hell: #141f36;
+
+    --schatten: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
+    --schatten-stark: 0 2px 4px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.45);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1100px 500px at 12% -8%, var(--akzent-hell), transparent 65%),
+    var(--grund);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.006em;
+}
+
+/* Kein Browser-Lila auf besuchten Links. */
+a {
+  color: var(--akzent-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--akzent);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--akzent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Kopfleiste ─────────────────────────────────────────────────────────── */
+
+.kopf {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--linie);
+  background: color-mix(in srgb, var(--grund) 82%, transparent);
+  backdrop-filter: saturate(1.6) blur(12px);
+}
+
+.marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.marke:hover {
+  color: var(--text);
+}
+
+.marke::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(140deg, var(--akzent), color-mix(in srgb, var(--akzent) 55%, #22d3ee));
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--akzent) 45%, transparent);
+}
+
+.kopf nav {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.kopf nav a {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  color: var(--text-2);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.kopf nav a:hover {
+  background: var(--flaeche-2);
+  color: var(--text);
+}
+
+/* ── Grundgeruest ───────────────────────────────────────────────────────── */
+
+main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem) 5rem;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 640;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 2.5rem 0 1rem;
+}
+
+.unterzeile {
+  color: var(--text-2);
+  margin: 0 0 2.25rem;
+  font-size: 0.98rem;
+}
+
+/* ── Anfragen-Tabelle ───────────────────────────────────────────────────── */
+
+.tabelle {
+  width: 1000px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.92rem;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  box-shadow: var(--schatten);
+  overflow: hidden;
+}
+
+.tabelle thead th {
+  text-align: left;
+  font-weight: 550;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: var(--flaeche-2);
+  border-bottom: 1px solid var(--linie);
+  padding: 0.7rem 1rem;
+  white-space: nowrap;
+}
+
+.tabelle td {
+  border-bottom: 1px solid var(--linie);
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  color: var(--text-2);
+}
+
+.tabelle tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabelle tbody tr {
+  transition: background 0.12s ease;
+}
+
+.tabelle tbody tr:hover {
+  background: var(--flaeche-2);
+}
+
+.tabelle td.betreff {
+  width: 340px;
+}
+
+.tabelle td.betreff a {
+  font-weight: 550;
+  color: var(--text);
+}
+
+.tabelle td.betreff a:hover {
+  color: var(--akzent);
+}
+
+.tabelle td:first-child {
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Statuskennzeichen ──────────────────────────────────────────────────── */
+
+.marke-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.24rem 0.65rem 0.24rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 550;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.marke-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ist-neu {
+  color: var(--blau);
+  background: var(--blau-hell);
+  border-color: color-mix(in srgb, var(--blau) 22%, transparent);
+}
+
+.ist-in_arbeit {
+  color: var(--gelb);
+  background: var(--gelb-hell);
+  border-color: color-mix(in srgb, var(--gelb) 25%, transparent);
+}
+
+.ist-erledigt {
+  color: var(--gruen);
+  background: var(--gruen-hell);
+  border-color: color-mix(in srgb, var(--gruen) 22%, transparent);
+}
+
+/* ── Flaechen ───────────────────────────────────────────────────────────── */
+
+.karte {
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--schatten);
+}
+
+.karte p:first-child {
+  margin-top: 0;
+}
+
+.karte p:last-child {
+  margin-bottom: 0;
+}
+
+.leer {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-3);
+  background: var(--flaeche);
+  border: 1px dashed var(--linie-stark);
+  border-radius: var(--radius);
+}
+
+/* ── Notizen ────────────────────────────────────────────────────────────── */
+
+.notiz {
+  position: relative;
+  padding: 0.85rem 1.1rem 0.85rem 1.4rem;
+  margin-bottom: 0.7rem;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius-klein);
+  color: var(--text-2);
+}
+
+.notiz::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  bottom: 0.85rem;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--akzent);
+  opacity: 0.7;
+}
+
+.notiz time {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-3);
+  margin-bottom: 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Formular ───────────────────────────────────────────────────────────── */
+
+form {
+  max-width: 34rem;
+}
+
+.feld {
+  display: block;
+  margin-bottom: 1.15rem;
+}
+
+.feld span {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 550;
+  color: var(--text-2);
+  margin-bottom: 0.4rem;
+}
+
+.feld input,
+.feld textarea {
+  width: 100%;
+  padding: 0.62rem 0.8rem;
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--radius-klein);
+  background: var(--flaeche);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feld input::placeholder,
+.feld textarea::placeholder {
+  color: var(--text-3);
+}
+
+.feld input:focus,
+.feld textarea:focus {
+  outline: none;
+  border-color: var(--akzent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--akzent) 18%, transparent);
+}
+
+.feld textarea {
+  min-height: 8.5rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+/* ── Schaltflaechen ─────────────────────────────────────────────────────── */
+
+button {
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-klein);
+  border: 1px solid var(--akzent);
+  background: var(--akzent);
+  color: #fff;
+  font: inherit;
+  font-weight: 550;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.06s ease, background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button.stumm {
+  background: var(--flaeche);
+  color: var(--text-2);
+  border-color: var(--linie-stark);
+}
+
+button.stumm:hover:not(:disabled) {
+  background: var(--flaeche-2);
+  color: var(--text);
+  filter: none;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* ── Kleinkram ──────────────────────────────────────────────────────────── */
+
+.zurueck {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--text-3);
+}
+
+.zurueck:hover {
+  color: var(--akzent);
+}
+
+.nachricht {
+  white-space: pre-wrap;
+  margin: 0;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+.absender {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  color: var(--text-3);
+  font-size: 0.88rem;
+  margin: 0 0 2rem;
+}
+
+.absender strong {
+  color: var(--text-2);
+  font-weight: 550;
+}
+
+/* ── Kacheln auf der Startseite ─────────────────────────────────────────── */
+
+.kacheln {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1rem;
+}
+
+.kachel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  box-shadow: var(--schatten);
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.kachel:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--schatten-stark);
+  border-color: color-mix(in srgb, var(--akzent) 35%, var(--linie));
+  color: inherit;
+}
+
+.kachel-titel {
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.kachel-text {
+  color: var(--text-2);
+  font-size: 0.92rem;
+  flex: 1;
+}
+
+.kachel-pfeil {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 550;
+  color: var(--akzent-text);
+}
