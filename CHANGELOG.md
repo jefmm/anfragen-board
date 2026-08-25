@@ -20,6 +20,13 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.1.3] – Kritische Sicherheitslücke in Datenbank-Schema behoben(supabase/migrations/) und Leserechte für Notizen ergänzt:
+
+Für die interne Tabelle ´public.anfragen_intern´ fehlte im Grundschema die Aktivierung von Row Level Security(RLS), während gleichzeitig der Rolle ´anon´ Leserechte gewährt wurden.
+Dadurch hätten vertrauliche interne Daten (Budgets, Bearbeiter, Notizen) von jedem Besucher über die Supabase-REST_API abgefragt werden können. RLS wurde per Migration aktiviert und die Leserechte für ´anon´ wurden entzogen.
+
+In ´public.notizen´ fehlte eine ´SELECT´-Policy für RLS. Dadurch konnten gespeicherte Notizen im Board zuvor nicht angezeigt werden. Eine entsprechende Leseberechtigung für autorisierte und anonyme Board-Nutzer wurde ergänzt.
+
 ## [0.1.2] – Mehrfache Client-Instanziierung verhindert:
 
 In browserClient() wurde ein Singleton-Pattern eingeführt, sodass im Browser nur noch eine einzige Supabase-Client Instanz wiederverwendet wird, statt bei jedem Aufruf eine neue Verbindung aufzubauen.

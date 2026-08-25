@@ -28,16 +28,24 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 ### Fund 1
 
 - **Wo:** lib/supabase.ts | Zeilen 15 und 20
-- **Was war falsch:** browserClient hätte mit einem Secret Key mit NEXT_PUBLIC_ -Präfix einen Client erstellt.
+- **Was war falsch:** ´browserClient´ hätte mit einem Secret Key mit ´NEXT_PUBLIC_´ -Präfix einen Client erstellt.
 - **Was hätte passieren können:** Der Secret Key wäre im browserClient gelandet.
-- **Wie ich es behoben habe:** Ich habe die Zugriffswege angepasst: browserClient verwendet nun NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, während serverClient SUPABASE_SECRET_KEY verwendet.
+- **Wie ich es behoben habe:** Ich habe die Zugriffswege angepasst: ´browserClient´ verwendet nun ´NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY´, während ´erverClient´ ´SUPABASE_SECRET_KEY´ verwendet.
 
 ### Fund 2
 
 - **Wo:** lib/supabase.ts | Zeile ab 14 | browserClient
-- **Was war falsch:** Bei jedem Aufruf von browserClient() wurde eine neue Supabase-Client-Instanz erzeugt. Dadurch konnten innerhalb derselben Browser-Anwendung unnötig mehrere Instanzen entstehen.
-- **Was hätte passieren können:** Die wiederholte Erstellung hätte zu unnötigem Speicher- und Verbindungsaufwand sowie zu schwerer nachvollziehbarem Verhalten() im Browser führen können.
-- **Wie ich es behoben habe:** Eine wiederverwendbare Variable browserClientInstance ergänzt. Die Supabase-Client-Instanz wird nun nur erzeugt, wenn doch keine vorhanden ist, und bei weiteren Aufrufen wiederverwendet.
+- **Was war falsch:** Bei jedem Aufruf von ´browserClient()´ wurde eine neue Supabase-Client-Instanz erzeugt. Dadurch konnten innerhalb derselben Browser-Anwendung unnötig mehrere Instanzen entstehen.
+- **Was hätte passieren können:** Die wiederholte Erstellung hätte zu unnötigem Speicher- und Verbindungsaufwand sowie zu schwerer nachvollziehbarem Verhalten im Browser führen können.
+- **Wie ich es behoben habe:** Eine wiederverwendbare Variable ´browserClientInstance´ ergänzt. Die Supabase-Client-Instanz wird nun nur erzeugt, wenn doch keine vorhanden ist, und bei weiteren Aufrufen wiederverwendet.
+
+### Fund 3
+
+- **Wo:** supabase/migrations/20260101120000_001_grundschema.sql | Datenbank-Schema (´anfrage_intern´ und ´notizen´)
+- **Was war falsch:** Bei ´public.anfrage_intern´ war Row Level Security nicht aktiviert, obwohl vertrauliche interne Felder enthalten sind und anon Leserechte hatte. Zudem fehlte bei public.´notizen´ eine ´SELECT´-Policy.
+- **Was hätte passieren können:** Jeder Besucher hätte mit dem öffentlichen Schlüssel sensible interne Einschätzungen und Budgets auslesen können. Zudem konnten angelegte Notizen in der Oberfläche nicht geladen werden.
+- **Wie ich es behoben habe:** In der neuen Migrationsdatei ´20260825123000_0002_fix_rls_und_policies.sql´ wurde RLS für anfrage_intern aktiviert, anon die Rechte entzogen und die fehlende ´SELECT´-Policy für ´notizen´ ergänzt.
+
 
 <!-- weitere Funde hier -->
 
