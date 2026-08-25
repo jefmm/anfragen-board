@@ -195,7 +195,8 @@ h2 {
 /* ── Anfragen-Tabelle ───────────────────────────────────────────────────── */
 
 .tabelle {
-  width: 1000px;
+  width: 100%;
+  min-width: 640px;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.92rem;
@@ -255,6 +256,65 @@ h2 {
   color: var(--text-3);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+/* ── Tabelle: nur ab Tablet/Desktop sichtbar ───────────────────────────── */
+
+.tabelle-wrapper {
+  overflow-x: auto;
+}
+
+/* ── Mobile Karten: standardmaessig ausgeblendet ───────────────────────── */
+
+.anfragen-karten {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .tabelle-wrapper {
+    display: none;
+  }
+
+  .anfragen-karten {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .anfrage-karte {
+    display: block;
+    background: var(--flaeche);
+    border: 1px solid var(--linie);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    box-shadow: var(--schatten);
+    color: inherit;
+  }
+
+  .anfrage-karte-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .anfrage-karte-betreff {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .anfrage-karte-name,
+  .anfrage-karte-email,
+  .anfrage-karte-datum {
+    margin: 0.15rem 0;
+    color: var(--text-2);
+    font-size: 0.88rem;
+  }
+
+  .anfrage-karte-datum {
+    color: var(--text-3);
+  }
 }
 
 /* ── Statuskennzeichen ──────────────────────────────────────────────────── */

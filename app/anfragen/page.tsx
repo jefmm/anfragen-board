@@ -45,32 +45,52 @@ export default async function AnfragenSeite() {
           Noch keine Anfragen. <Link href="/neu">Die erste anlegen.</Link>
         </div>
       ) : (
-        <table className="tabelle">
-          <thead>
-            <tr>
-              <th>Eingegangen</th>
-              <th>Name</th>
-              <th>E-Mail</th>
-              <th className="betreff">Betreff</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
+        <>
+          {/* Desktop/Tablet: Tabelle */}
+          <div className="tabelle-wrapper">
+            <table className="tabelle">
+              <thead>
+                <tr>
+                  <th>Eingegangen</th>
+                  <th>Name</th>
+                  <th>E-Mail</th>
+                  <th className="betreff">Betreff</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {anfragen.map((a) => (
+                  <tr key={a.id}>
+                    <td>{datum(a.created_at)}</td>
+                    <td>{a.name}</td>
+                    <td>{a.email}</td>
+                    <td className="betreff">
+                      <Link href={`/anfragen/${a.id}`}>{a.betreff}</Link>
+                    </td>
+                    <td>
+                      <span className={`marke-status ist-${a.status}`}>{STATUS_TEXT[a.status]}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobil: Karten */}
+          <div className="anfragen-karten">
             {anfragen.map((a) => (
-              <tr key={a.id}>
-                <td>{datum(a.created_at)}</td>
-                <td>{a.name}</td>
-                <td>{a.email}</td>
-                <td className="betreff">
-                  <Link href={`/anfragen/${a.id}`}>{a.betreff}</Link>
-                </td>
-                <td>
+              <Link href={`/anfragen/${a.id}`} key={a.id} className="anfrage-karte">
+                <div className="anfrage-karte-kopf">
+                  <span className="anfrage-karte-betreff">{a.betreff}</span>
                   <span className={`marke-status ist-${a.status}`}>{STATUS_TEXT[a.status]}</span>
-                </td>
-              </tr>
+                </div>
+                <p className="anfrage-karte-name">{a.name}</p>
+                <p className="anfrage-karte-email">{a.email}</p>
+                <p className="anfrage-karte-datum">{datum(a.created_at)}</p>
+              </Link>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </>
       )}
     </>
   );

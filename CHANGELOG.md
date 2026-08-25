@@ -20,6 +20,12 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.2.1] – Fehlerbehebungen in Mobile-Layout und Cross-Origin-Blockade:
+
+- Fehlendes Viewport-Meta-Tag in ´app/layout.tsx´ ergänzt. Ohne diesen Tag hat der mobile Browser die Seite wie eine Desktop-Ansicht dargestellt unt eingezoomt.
+- Anfragen-Übersicht (´app/anfragen/page.tsx´) zeigt auf Bildschirmen unter 720px jetzt eine gestapelte Kartenansicht statt der festbreiten Tabelle (´.tabelle´ hatte ´width: 1000px´, was auf dem Handy zu horizontalem Auslaufen führte).
+- Status-Umschaltung (´StatusSchalter.tsx´) hat beim Testen über die lokale Netzwerk-IP (Handy im selben WLAN) nicht funktioniert. Ursache: Next.js blockt seit Version 16 standartmässig Cross-Origin-Zugriffe von anderen Geräten auf Dev-Server-Ressourcen. Behoben durch ´allowedDevOrigins´in ´next.config.ts´.
+- ´setzen()´in ´StatusSchalter.tsx´mit try/cath/finally abgesichert, damit ein fehlgeschlagener oder hängender Request die Buttons nicht dauerhaft blockiert und eine echte Fehlermeldung anzeigt.
 ## [0.2.0] – Interaktives Notizformula auf der Detailseite(´components/NotizFormular.tsx´) und Feinschliff im Layout(´app/globals.css´):
 
 - Nutzer Können nun direkt auf der Detailseite einer Anfrage neue interne Vermerke verfassen und speichern. Das Formular validiert die Eingabe, speichert den Eintrag über den Supabase-Client in der Tabelle ´notizen´ und aktualisiert die Ansicht unmittelbar nach erfolgreichem Eintrag.

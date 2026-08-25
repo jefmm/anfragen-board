@@ -53,6 +53,12 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 - **Was hätte passieren können:** Das Kernfeature "interne Vermerke zu Anfragen pflegen" war für Endanwender in der Oberfläche unvollständig und nicht nutzbar.
 - **Wie ich es behoben habe:** Eine neue interaktive Client-Komponente ´NotizFormular.tsx´erstellt, angebunden an die ´notizen´-Tabelle (Policies ´notizen_angelegen´/´notizen_lesen´erlauben dies für ´anon´/áuthenticated´) und auf der Detailseite integriert. Zusätzlich Abstand im Layout zwischen Formular und Notiz-Vorschau ergänzt (ápp/globals.css´).
 
+### Fund 5
+
+- **Wo:** ´app/layout.tsx´, ápp/anfragen/page.tsx´, ´app/globals.css´, ´components/StatusSchalter.tsx´, ´next.config.ts´
+- **Was war falsch:** Es fehlte das Viewport-Meta-Tag. Mobile Browser haben die Seite deshalb wie eine Desktop-Seite gerendert und automatisch eingezoomt. die Anfragen-Tabelle hatte eine feste Breite (´width: 1000px´). Auf dem Handy lief sie seitlich aus dem sichtbaren Bereich, auch mit horizontalem Scroll war das keine gute Nutzererfahrung. Beim testen der Status-Umschaltung über die lokale Netzwerk-IP (Handy im selben WLAN wie der Rechner) reagierten die Buttons visuell (grau, deaktiviert), aber die Änderung wurde nie gespeichert.
+- **Was hätte passieren können:** Ohne den Vieport-Fix und die Kartenansicht wäre die Anwendung auf Mobilgeräten kaum benutzbar gewesen - für ein Anfragen-Board, das im Alltag auch mal schnell vom Handy aus geprüft wird, ein relevanter Mangel. Das Cross-Origin-Problem hätte bei einem Deployment gar nicht auftreten können, da es sich um eine reine Dev-Server-Einschränkung handelt - es hätte im schlimmsten Fall aber unnötig Zeit bei der lokalen Fehlersuche gekostet, wenn man die Ursache nicht kennt.
+- **Wie ich es behoben habe:** ´viewport´-Export in ´app/layout.tsx´ergänzt (´width: ´device-width´´, ´initialScale: 1´). Tabelle in der Übersicht bleibt ab Tablet-Breite (>720px) erhalten (inkl. ´overflow-x: auto´ als Fallback), wird darunter aber komplett durch eine gestapelte Kartenansicht (´.anfragen-karten´) ersetzt. Mit den Browser-Entwicklertools auf dem Handy (Konsole) festgestellt, dass Next.js Cross-Origin-Zugriffe von der lokalen Netzwerk-IP auf Dev-Server-Ressourcen blockiert. Behoben mit ´allowedDevOrigins´in ´next.config.ts´. ´StatusSchalter.tsx´ zusätzlich robuster gemacht (try/catch/finally), damit ein fehlgeschlagener Request nicht die komplette Bedienbarkeit blockiert.
 <!-- weitere Funde hier -->
 
 ---
