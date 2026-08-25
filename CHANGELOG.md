@@ -20,6 +20,18 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.1.2] – Mehrfache Client-Instanziierung verhindert:
+
+In browserClient() wurde ein Singleton-Pattern eingeführt, sodass im Browser nur noch eine einzige Supabase-Client Instanz wiederverwendet wird, statt bei jedem Aufruf eine neue Verbindung aufzubauen.
+
+## [0.1.1] – Lokale Supabase-Konfiguration eingerichtet
+
+- .env.local erstellt und die benötigten Supabase-Konfigurationswerte eingetragen.
+- Datenbankzugriff angepasst:
+  - Browserzugriff über den öffentlichen Publishable Key
+  - Serverseitiger Zugriff über einen geschützten Secret Key
+- Authentifizierung für Browser- und Server-Clients korrigiert.
+- Zugriffbedingungen für interne beziehungsweise serverseitige Funktionen aus Sicherheitsgründen angepasst.
 
 ## [0.1.0] – Ausgangszustand
 

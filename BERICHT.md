@@ -13,8 +13,8 @@ Bitte ausfüllen und mit abgeben. Kurz halten, Stichpunkte reichen völlig.
 Damit wir die Anwendung von außen ansehen können, so wie es jeder Besucher
 könnte.
 
-- **Supabase-Projekt-URL:** <!-- https://xxxxx.supabase.co -->
-- **Publishable Key:** <!-- der öffentliche Schlüssel -->
+- **Supabase-Projekt-URL:** <!-- https://apckqkgdeqsanrjriibq.supabase.co -->
+- **Publishable Key:** <!-- sb_publishable_fYIokOj8PnyOmmPe03SXIg_5eG5Mn6D -->
 
 > Der Publishable Key ist dafür gedacht, öffentlich zu sein, der steht bei jeder
 > Supabase-Anwendung im Browser. **Schick uns niemals den Secret Key.**
@@ -27,17 +27,17 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 
 ### Fund 1
 
-- **Wo:** <!-- Datei und Zeile, oder "in der Datenbank" -->
-- **Was war falsch:**
-- **Was hätte passieren können:**
-- **Wie ich es behoben habe:**
+- **Wo:** lib/supabase.ts | Zeilen 15 und 20
+- **Was war falsch:** browserClient hätte mit einem Secret Key mit NEXT_PUBLIC_ -Präfix einen Client erstellt.
+- **Was hätte passieren können:** Der Secret Key wäre im browserClient gelandet.
+- **Wie ich es behoben habe:** Ich habe die Zugriffswege angepasst: browserClient verwendet nun NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, während serverClient SUPABASE_SECRET_KEY verwendet.
 
 ### Fund 2
 
-- **Wo:**
-- **Was war falsch:**
-- **Was hätte passieren können:**
-- **Wie ich es behoben habe:**
+- **Wo:** lib/supabase.ts | Zeile ab 14 | browserClient
+- **Was war falsch:** Bei jedem Aufruf von browserClient() wurde eine neue Supabase-Client-Instanz erzeugt. Dadurch konnten innerhalb derselben Browser-Anwendung unnötig mehrere Instanzen entstehen.
+- **Was hätte passieren können:** Die wiederholte Erstellung hätte zu unnötigem Speicher- und Verbindungsaufwand sowie zu schwerer nachvollziehbarem Verhalten() im Browser führen können.
+- **Wie ich es behoben habe:** Eine wiederverwendbare Variable browserClientInstance ergänzt. Die Supabase-Client-Instanz wird nun nur erzeugt, wenn doch keine vorhanden ist, und bei weiteren Aufrufen wiederverwendet.
 
 <!-- weitere Funde hier -->
 
@@ -56,9 +56,9 @@ hättest du als Nächstes probiert?
 
 ### Erste Stelle
 
-- **Was die KI vorgeschlagen hat:**
-- **Warum ich es nicht übernommen habe:**
-- **Was ich stattdessen gemacht habe:**
+- **Was die KI vorgeschlagen hat:** legacy anon public key zu verwenden
+- **Warum ich es nicht übernommen habe:** in der Aufgabe ist explizit den publishable key anzugeben
+- **Was ich stattdessen gemacht habe:** ich habe den publishable key verwendet
 
 ### Zweite Stelle
 
