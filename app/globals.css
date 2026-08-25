@@ -406,6 +406,42 @@ form {
   line-height: 1.55;
 }
 
+/* ── Notiz-Formular ─────────────────────────────────────────────────────── */
+
+.notiz-formular {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 34rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.notiz-formular label {
+  font-size: 0.86rem;
+  font-weight: 550;
+  color: var(--text-2);
+}
+
+.notiz-formular textarea {
+  width: 100%;
+  padding: 0.62rem 0.8rem;
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--radius-klein);
+  background: var(--flaeche);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.55;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notiz-formular textarea:focus {
+  outline: none;
+  border-color: var(--akzent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--akzent) 18%, transparent);
+}
+
 /* ── Schaltflaechen ─────────────────────────────────────────────────────── */
 
 button {

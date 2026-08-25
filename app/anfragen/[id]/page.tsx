@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { serverClient, type Anfrage, type Notiz } from '@/lib/supabase';
 import { StatusSchalter } from '@/components/StatusSchalter';
+import { NotizFormular } from '@/components/NotizFormular';
 
 function zeitpunkt(wert: string): string {
   return new Date(wert).toLocaleString('de-DE', {
@@ -56,6 +57,7 @@ export default async function AnfrageSeite({ params }: { params: Promise<{ id: s
       </div>
 
       <h2>Interne Notizen</h2>
+      <NotizFormular anfrageId={a.id} />
       {eintraege.length === 0 ? (
         <div className="leer">Zu dieser Anfrage gibt es noch keine Notizen.</div>
       ) : (

@@ -20,12 +20,18 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.2.0] – Interaktives Notizformula auf der Detailseite(´components/NotizFormular.tsx´) und Feinschliff im Layout(´app/globals.css´):
+
+- Nutzer Können nun direkt auf der Detailseite einer Anfrage neue interne Vermerke verfassen und speichern. Das Formular validiert die Eingabe, speichert den Eintrag über den Supabase-Client in der Tabelle ´notizen´ und aktualisiert die Ansicht unmittelbar nach erfolgreichem Eintrag.
+
+- Abstand zwischen Notizformular und Notiz-Vorschau ergänzt, damit beide Bereiche optisch klar getrennt sind.
+
 ## [0.1.3] – Kritische Sicherheitslücke in Datenbank-Schema behoben(supabase/migrations/) und Leserechte für Notizen ergänzt:
 
-Für die interne Tabelle ´public.anfragen_intern´ fehlte im Grundschema die Aktivierung von Row Level Security(RLS), während gleichzeitig der Rolle ´anon´ Leserechte gewährt wurden.
+- Für die interne Tabelle ´public.anfragen_intern´ fehlte im Grundschema die Aktivierung von Row Level Security(RLS), während gleichzeitig der Rolle ´anon´ Leserechte gewährt wurden.
 Dadurch hätten vertrauliche interne Daten (Budgets, Bearbeiter, Notizen) von jedem Besucher über die Supabase-REST_API abgefragt werden können. RLS wurde per Migration aktiviert und die Leserechte für ´anon´ wurden entzogen.
 
-In ´public.notizen´ fehlte eine ´SELECT´-Policy für RLS. Dadurch konnten gespeicherte Notizen im Board zuvor nicht angezeigt werden. Eine entsprechende Leseberechtigung für autorisierte und anonyme Board-Nutzer wurde ergänzt.
+- In ´public.notizen´ fehlte eine ´SELECT´-Policy für RLS. Dadurch konnten gespeicherte Notizen im Board zuvor nicht angezeigt werden. Eine entsprechende Leseberechtigung für autorisierte und anonyme Board-Nutzer wurde ergänzt.
 
 ## [0.1.2] – Mehrfache Client-Instanziierung verhindert:
 

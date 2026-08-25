@@ -46,6 +46,12 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 - **Was hätte passieren können:** Jeder Besucher hätte mit dem öffentlichen Schlüssel sensible interne Einschätzungen und Budgets auslesen können. Zudem konnten angelegte Notizen in der Oberfläche nicht geladen werden.
 - **Wie ich es behoben habe:** In der neuen Migrationsdatei ´20260825123000_0002_fix_rls_und_policies.sql´ wurde RLS für anfrage_intern aktiviert, anon die Rechte entzogen und die fehlende ´SELECT´-Policy für ´notizen´ ergänzt.
 
+### Fund 4
+
+- **Wo:** ´app/anfragen/[id]/page.tsx´ und ´components/NotizFormular.tsx´
+- **Was war falsch:** Auf der Detailseite wurden Notizen zwar geladen und dargestellt, es gab in der Benutzeroberfläche unvollständig und nicht nutzbar.
+- **Was hätte passieren können:** Das Kernfeature "interne Vermerke zu Anfragen pflegen" war für Endanwender in der Oberfläche unvollständig und nicht nutzbar.
+- **Wie ich es behoben habe:** Eine neue interaktive Client-Komponente ´NotizFormular.tsx´erstellt, angebunden an die ´notizen´-Tabelle (Policies ´notizen_angelegen´/´notizen_lesen´erlauben dies für ´anon´/áuthenticated´) und auf der Detailseite integriert. Zusätzlich Abstand im Layout zwischen Formular und Notiz-Vorschau ergänzt (ápp/globals.css´).
 
 <!-- weitere Funde hier -->
 
@@ -55,6 +61,12 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 
 Was ist dir aufgefallen, was du aber nicht mehr angefasst hast? Und was
 hättest du als Nächstes probiert?
+
+### Beobachtung: Zugriffsrechte auf `notizen`
+
+* **Wo:** Migration `0001_grundschema.sql`, Tabelle `notizen`
+* **Was mir aufgefallen ist:** Die Tabelle wird im Schema-Kommentar als "interne Vermerke" beschrieben, die Policies erlauben aber `insert` und `select` für die Rolle `anon` — also ohne Anmeldung. Da die Anwendung aktuell kein Auth-System hat, ist "intern" hier nur inhaltlich gemeint, nicht technisch abgesichert.
+* **Warum ich es nicht geändert habe:** Eine Einschränkung auf `authenticated` würde ein Login-System voraussetzen, das außerhalb des Aufgabenumfangs liegt. Ich dokumentiere es hier, damit es bei einer künftigen Erweiterung (z. B. Team-Login) berücksichtigt wird.
 
 <!-- Hier ehrlich zu sein bringt dir mehr als eine Lücke. -->
 
