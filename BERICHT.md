@@ -59,6 +59,13 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 - **Was war falsch:** Es fehlte das Viewport-Meta-Tag. Mobile Browser haben die Seite deshalb wie eine Desktop-Seite gerendert und automatisch eingezoomt. die Anfragen-Tabelle hatte eine feste Breite (´width: 1000px´). Auf dem Handy lief sie seitlich aus dem sichtbaren Bereich, auch mit horizontalem Scroll war das keine gute Nutzererfahrung. Beim testen der Status-Umschaltung über die lokale Netzwerk-IP (Handy im selben WLAN wie der Rechner) reagierten die Buttons visuell (grau, deaktiviert), aber die Änderung wurde nie gespeichert.
 - **Was hätte passieren können:** Ohne den Vieport-Fix und die Kartenansicht wäre die Anwendung auf Mobilgeräten kaum benutzbar gewesen - für ein Anfragen-Board, das im Alltag auch mal schnell vom Handy aus geprüft wird, ein relevanter Mangel. Das Cross-Origin-Problem hätte bei einem Deployment gar nicht auftreten können, da es sich um eine reine Dev-Server-Einschränkung handelt - es hätte im schlimmsten Fall aber unnötig Zeit bei der lokalen Fehlersuche gekostet, wenn man die Ursache nicht kennt.
 - **Wie ich es behoben habe:** ´viewport´-Export in ´app/layout.tsx´ergänzt (´width: ´device-width´´, ´initialScale: 1´). Tabelle in der Übersicht bleibt ab Tablet-Breite (>720px) erhalten (inkl. ´overflow-x: auto´ als Fallback), wird darunter aber komplett durch eine gestapelte Kartenansicht (´.anfragen-karten´) ersetzt. Mit den Browser-Entwicklertools auf dem Handy (Konsole) festgestellt, dass Next.js Cross-Origin-Zugriffe von der lokalen Netzwerk-IP auf Dev-Server-Ressourcen blockiert. Behoben mit ´allowedDevOrigins´in ´next.config.ts´. ´StatusSchalter.tsx´ zusätzlich robuster gemacht (try/catch/finally), damit ein fehlgeschlagener Request nicht die komplette Bedienbarkeit blockiert.
+
+### Fund 6
+
+- **Wo:** ´app/anfragen/page.tsx´ und ´app/anfragen/[id]/page.tsx´ | am Dateianfang
+- **Was war falsch:** Beim Production-Build wurden die Seiten teilweise statisch (prerendered) erzeugt, wodurch die gezeigten Statuswerte die Daten vom Build‑Zeitpunkt widerspiegelten statt der aktuellen Daten aus Supabase. Im Dev‑Server wurden die Seiten hingegen on‑demand gerendert und zeigten aktuelle Werte.
+- **Was hätte passieren können:** Produktionsnutzer hätten veraltete Statusinformationen gesehen; Änderungen in der Datenbank wären erst nach einem erneuten Build sichtbar gewesen. Das hätte zu Verwirrung oder falschem Bearbeitungsstatus geführt.
+- **Wie ich es behoben habe:** Ich habe in beiden Server-Komponenten die Direktive export const dynamic = 'force-dynamic'; hinzugefügt, sodass Next.js die Seiten bei jeder Anfrage serverseitig neu rendert. Anschließend rm -rf .next && npm run build && npm start ausgeführt und das Verhalten verifiziert.
 <!-- weitere Funde hier -->
 
 ---
@@ -88,9 +95,9 @@ hättest du als Nächstes probiert?
 
 ### Zweite Stelle
 
-- **Was die KI vorgeschlagen hat:**
-- **Warum ich es nicht übernommen habe:**
-- **Was ich stattdessen gemacht habe:**
+- **Was die KI vorgeschlagen hat:** Die KI schlug vor, ´allowedDevOrigins´ in ´next.config.ts´ nur für die Entwicklungsumgebung zu setzen (mittels NODE_ENV-Check) und ´DEV_ALLOWED_ORIGINS´ aus ´.env.local´ zu lesen. Außerdem wurde empfohlen, ´DEV_ALLOWED_ORIGINS´ in ´.env.local´ zu speichern oder alternativ das lokale Subnetz (192.168.178.0/24) als Fallback zu verwenden. Ziel war, dass Handy/LAN-Geräte während der Entwicklung zuverlässig auf den Next-Dev-Server zugreifen können, ohne dass dev-only Einstellungen in Production landen.
+- **Warum ich es nicht übernommen habe:** Ich habe die Änderung nicht übernommen, weil sie zwar Development-Convenience bietet, aber das Projektverhalten für zukünftige Tester*innen und Teammitglieder weniger transparent macht. Automatische oder breit gefasste Dev-Ausnahmen (z.B. Subnetz-Fallback) können verwirren oder bei Fremdgeräten im gleichen Netz unbeabsichtigten Zugriff erlauben. Ich bevorzuge eine klare, einfache Konfiguration ohne versteckte dev-Ausnahmen im Config-File.
+- **Was ich stattdessen gemacht habe:** Ich belasse next.config.ts leer (kein allowedDevOrigins) und verwalte Zugriffs-Origins ausschließlich über .env.local bei Bedarf. .env.local enthält die notwendigen Keys. Wenn ich lokal per Handy testen will, setze ich ´DEV_ALLOWED_ORIGINS´ vorübergehend in ´.env.local´, starte den Dev-Server neu und teste. So bleibt die Repository-Konfiguration sauber, reproduzierbar und sicher für Production/CI, und lokale Anpassungen sind explizit und leicht nachvollziehbar.
 
 ---
 

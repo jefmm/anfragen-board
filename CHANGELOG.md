@@ -20,6 +20,14 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.2.2] – Build & Dev: next.config.ts auf sauberen Zustand zurückgesetzt (LAN-Tests lokal über .env.local) | Build & Prod: Seiten erzwingen, dass sie Laufzeit-Daten verwenden (fix für unterschiedliche Statusanzeige)
+
+- next.config.ts wieder bereinigt. Ziel: klare, reproduzierbare Production-Konfiguration vor dem Deploy.
+- Entwicklertipp: Lokale Lan-Tests mit Handy erfolgen über ´.env.local´ (DEV_ALLOWED_ORIGINS); keine dauerhaften dev-Ausnahmen im Repo.
+- Ursache: Bei Production-Builds wurden bestimmte Seiten beim Build statisch (prerendered) erzeugt. Dadurch zeigte die gestartete Produktions-App Daten vom Build-Zeitpunkt; im Dev-Server wurden die Seiten jedoch bei jeder Anfrage neu gerendert und zeigten die aktuellen Daten aus Supabase.
+- Fix: In den Server-Komponenten app/anfragen/page.tsx und app/anfragen/[id]/page.tsx wurde oben die Direktive export const dynamic = ´force-dynamic´; ergänzt. Das zwingt Next.js, diese Seiten bei jeder Anfrage serverseitig neu zu rendern und die aktuellen DB-Daten anzuzeigen.
+- Auswirkungen: Nach neuem Build/start (npm run build && npm start) stimmen Statusanzeigen und Notizen mit der Datenbank überein, wie im Dev-Server. Seiten, die häufig aktuelle DB-Daten zeigen, werden nicht mehr beim build eingefroren.
+- Tests: Lokal rm -rf .next && npm build && npm start durchgeführt; Statusänderungen in Supabase nun ohne erneuten Build auf der Produktivinstanz angezeigt.
 ## [0.2.1] – Fehlerbehebungen in Mobile-Layout und Cross-Origin-Blockade:
 
 - Fehlendes Viewport-Meta-Tag in ´app/layout.tsx´ ergänzt. Ohne diesen Tag hat der mobile Browser die Seite wie eine Desktop-Ansicht dargestellt unt eingezoomt.
