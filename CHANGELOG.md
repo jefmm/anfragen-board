@@ -20,6 +20,13 @@ einfach dazu. Uns interessiert, wie du denkst, nicht ob du die Regel auf die
 Nachkommastelle triffst.
 
 ---
+## [0.2.3] – Security: Anpassung ´anon´ Datenbank-Rechte:
+
+- Ursache: Das initiale Schema enthielt weitreichende GRANTs, die anonyme Zugriffsrechte (auch für sensitive Tabellen) ermöglichten. In Kombination mit permissiven Policies bestand das Risiko, dass anonyme Nutzer Schreib‑ oder Löschoperationen durchführen konnten.
+- Fix: Neue Supabase‑Migrations hinzugefügt:
+  - supabase/migrations/20260826_0002_fix_rls_and_policies.sql — Entzug anonymer Leserechte auf public.anfrage_intern und Ergänzung der notizen_lesen‑Policy.
+  - supabase/migrations/20260827_0003_revoke_anon_privileges.sql — Explizites Entfernen von UPDATE/DELETE/TRUNCATE/REFERENCES/TRIGGER für anon auf public.anfrage_intern und public.notizen.
+- Auswirkungen: Anonyme Nutzer können weiterhin öffentliche Anfragen einreichen und die öffentliche Übersicht einsehen, erhalten jedoch keine Schreib‑ oder Löschrechte auf sensible Tabellen. Interne Tabellen (anfrage_intern) bleiben authentifizierten Nutzern vorbehalten.
 ## [0.2.2] – Build & Dev: next.config.ts auf sauberen Zustand zurückgesetzt (LAN-Tests lokal über .env.local) | Build & Prod: Seiten erzwingen, dass sie Laufzeit-Daten verwenden (fix für unterschiedliche Statusanzeige)
 
 - next.config.ts wieder bereinigt. Ziel: klare, reproduzierbare Production-Konfiguration vor dem Deploy.

@@ -66,6 +66,13 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 - **Was war falsch:** Beim Production-Build wurden die Seiten teilweise statisch (prerendered) erzeugt, wodurch die gezeigten Statuswerte die Daten vom Build‑Zeitpunkt widerspiegelten statt der aktuellen Daten aus Supabase. Im Dev‑Server wurden die Seiten hingegen on‑demand gerendert und zeigten aktuelle Werte.
 - **Was hätte passieren können:** Produktionsnutzer hätten veraltete Statusinformationen gesehen; Änderungen in der Datenbank wären erst nach einem erneuten Build sichtbar gewesen. Das hätte zu Verwirrung oder falschem Bearbeitungsstatus geführt.
 - **Wie ich es behoben habe:** Ich habe in beiden Server-Komponenten die Direktive export const dynamic = 'force-dynamic'; hinzugefügt, sodass Next.js die Seiten bei jeder Anfrage serverseitig neu rendert. Anschließend rm -rf .next && npm run build && npm start ausgeführt und das Verhalten verifiziert.
+
+### Fund 7
+
+- **Wo:** supabase/migrations/20260827133000_0003_fix_grants_to_anon.sql
+- **Was war falsch:** In der ersten Migration waren weitergehende GRANTs an anon gesetzt, die potentiell UPDATE/DELETE-Rechte auf sensitive Tabellen erlauben.
+- **Was hätte passieren können:** Ein anonymer Besucher hätte, bei falscher Policy-Kombination und offenen Grants, Datensätze ändern oder löschen können - insbesondere in anfrage_intern und notizen.
+- **Wie ich es behoben habe:** Neue Migration hinzugefügt, die UPDATE/DELETE/TRUNCATE/REFERENCES/TRIGGER-Rechte für anon auf public.anfrage_intern und public.notizen entzieht. Die Migration ist in supabase/migrations/ committed; 
 <!-- weitere Funde hier -->
 
 ---
@@ -74,6 +81,17 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 
 Was ist dir aufgefallen, was du aber nicht mehr angefasst hast? Und was
 hättest du als Nächstes probiert?
+
+Implementierung einer vollständigen Nutzer-Authentifizierung (Accounts):
+
+Ich hätte gern ein Auth-System (z. B. Supabase Auth) in die Anwendung integriert, damit sich Benutzer anmelden können und Rechte zentral über ihre Accounts / Rollen verteilt werden. Mit Auth würde ich das Zugriffsmodell folgendermaßen vereinfachen und verbessern:
+
+- Anonyme Nutzer (anon) dürfen ausschließlich lesen — Formular absenden und die öffentliche Anfragen-Übersicht einsehen.
+- Authentifizierte Benutzer erhalten differenzierte Rechte (z. B. role = "staff" oder "admin"): je nach Rolle können sie Notizen anlegen, interne Einschätzungen sehen, Einträge aktualisieren oder löschen.
+- Policies in der Datenbank würden auth.uid() und Rollen nutzen, statt pauschaler to anon, authenticated-Regeln oder USING (true).
+- Das macht Rechteverwaltung klarer, sicherer und leichter testbar.
+- Warum ich es nicht geschafft habe: Zeitliche Begrenzung — ich habe priorisiert, die kritischen Sicherheitslücken in den DB-Migrationen zu schließen (REVOKE/Policy‑Fixes) und das Prerendering‑Problem zu beheben, damit die Anwendung in Prod zuverlässig aktuelle Daten anzeigt. Auth wäre ein nächster Schritt, der zusätzliches UI- und Testing-Aufwand bedeutet (Login/Session-Handling, Role-Management im Admin-UI, Anpassung der Server-/Client-Logik).
+- Wie ich es später umsetzen würde: Supabase Auth einrichten, Login/Logout-UI, serverseitige Sitzungserkennung in Next.js (Server Components/Route-Auth), Policies umstellen auf checks mit auth.uid() / role-Strings und separate Admin-Routes erstellen. Außerdem würde ich automatisierte Tests ergänzen, die auth-geschützte Pfade und Policies prüfen.
 
 ### Beobachtung: Zugriffsrechte auf `notizen`
 
@@ -106,3 +124,5 @@ hättest du als Nächstes probiert?
 Freies Feld. Etwas, das dir unabhängig von den Fehlern komisch vorkam, das du
 anders gebaut hättest, oder das du nicht verstanden hast. Darf auch leer
 bleiben.
+
+Das Projekt ist sehr gut aufgebaut und deckt ein breites, realistisches Themenspektrum ab. Als Anfänger habe ich viele interessante Dinge gelernt (Next.js Rendering‑Strategien, Supabase‑Migrations und RLS, Deploy‑Workflows). Gleichzeitig ist das Gesamtsystem nicht vollständig leicht zu automatisieren — insbesondere die Erstellung von Anfragen und einige Status‑Übergänge erfordern menschliche Kontextentscheidungen und Prüfungen. Für Routineaufgaben ließen sich Teile automatisieren (z. B. Validierungen, Benachrichtigungen, einfache Statusänderungen), aber komplexere Schritte wie inhaltliche Bewertung oder das Setzen interner Einschätzungen sollten meiner Meinung nach weiterhin manuell erfolgen oder durch ein gut geregeltes Rollen‑/Authentifizierungsmodell gesteuert werden.
