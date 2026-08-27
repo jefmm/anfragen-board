@@ -6,7 +6,7 @@ Bitte ausfüllen und mit abgeben. Kurz halten, Stichpunkte reichen völlig.
 
 ## Meine URL
 
-<!-- Die laufende Vercel-Adresse -->
+<!-- https://probeaufgabe-jeffry-mergenio.vercel.app -->
 
 ## Zugang zu deiner Datenbank
 
