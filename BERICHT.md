@@ -1,29 +1,14 @@
 # Bericht
 
-Bitte ausfüllen und mit abgeben. Kurz halten, Stichpunkte reichen völlig.
-
 ---
 
 ## Meine URL
 
 <!-- https://probeaufgabe-jeffry-mergenio.vercel.app -->
 
-## Zugang zu deiner Datenbank
-
-Damit wir die Anwendung von außen ansehen können, so wie es jeder Besucher
-könnte.
-
-- **Supabase-Projekt-URL:** <!-- https://apckqkgdeqsanrjriibq.supabase.co -->
-- **Publishable Key:** <!-- sb_publishable_fYIokOj8PnyOmmPe03SXIg_5eG5Mn6D -->
-
-> Der Publishable Key ist dafür gedacht, öffentlich zu sein, der steht bei jeder
-> Supabase-Anwendung im Browser. **Schick uns niemals den Secret Key.**
-> Nicht hier, nicht per Mail, nirgends. Wenn dir der Unterschied gerade nicht
-> klar ist, ist das die erste Sache, der du nachgehen solltest.
 
 ## Was ich gefunden und behoben habe
 
-Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 
 ### Fund 1
 
@@ -79,8 +64,6 @@ Je Fund vier Zeilen. Kopier den Block so oft du ihn brauchst.
 
 ## Was ich nicht geschafft habe
 
-Was ist dir aufgefallen, was du aber nicht mehr angefasst hast? Und was
-hättest du als Nächstes probiert?
 
 Implementierung einer vollständigen Nutzer-Authentifizierung (Accounts):
 
@@ -99,7 +82,6 @@ Ich hätte gern ein Auth-System (z. B. Supabase Auth) in die Anwendung integrier
 * **Was mir aufgefallen ist:** Die Tabelle wird im Schema-Kommentar als "interne Vermerke" beschrieben, die Policies erlauben aber `insert` und `select` für die Rolle `anon` — also ohne Anmeldung. Da die Anwendung aktuell kein Auth-System hat, ist "intern" hier nur inhaltlich gemeint, nicht technisch abgesichert.
 * **Warum ich es nicht geändert habe:** Eine Einschränkung auf `authenticated` würde ein Login-System voraussetzen, das außerhalb des Aufgabenumfangs liegt. Ich dokumentiere es hier, damit es bei einer künftigen Erweiterung (z. B. Team-Login) berücksichtigt wird.
 
-<!-- Hier ehrlich zu sein bringt dir mehr als eine Lücke. -->
 
 ---
 
@@ -121,8 +103,5 @@ Ich hätte gern ein Auth-System (z. B. Supabase Auth) in die Anwendung integrier
 
 ## Was mir am Projekt aufgefallen ist
 
-Freies Feld. Etwas, das dir unabhängig von den Fehlern komisch vorkam, das du
-anders gebaut hättest, oder das du nicht verstanden hast. Darf auch leer
-bleiben.
 
 Das Projekt ist sehr gut aufgebaut und deckt ein breites, realistisches Themenspektrum ab. Als Anfänger habe ich viele interessante Dinge gelernt (Next.js Rendering‑Strategien, Supabase‑Migrations und RLS, Deploy‑Workflows). Gleichzeitig ist das Gesamtsystem nicht vollständig leicht zu automatisieren — insbesondere die Erstellung von Anfragen und einige Status‑Übergänge erfordern menschliche Kontextentscheidungen und Prüfungen. Für Routineaufgaben ließen sich Teile automatisieren (z. B. Validierungen, Benachrichtigungen, einfache Statusänderungen), aber komplexere Schritte wie inhaltliche Bewertung oder das Setzen interner Einschätzungen sollten meiner Meinung nach weiterhin manuell erfolgen oder durch ein gut geregeltes Rollen‑/Authentifizierungsmodell gesteuert werden.
