@@ -4,6 +4,7 @@ Ein leichtgewichtiges, produktionsreifes Anfragen- und Lead-Management-System f�
 
 Entwickelt mit **Next.js (App Router)**, **PostgreSQL via Supabase** und **Vercel**.
 
+
 ---
 
 ## 🎯 Überblick & Kernfunktionen
